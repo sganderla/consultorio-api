@@ -1,8 +1,9 @@
 package br.com.uniamerica.api.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -15,15 +16,32 @@ import java.time.LocalDateTime;
 @Table(name = "historicos", schema = "public")
 public class Historico extends AbstractEntity {
 
-    private String observacao;
+    @Getter @Setter
+    @Column(name = "data", nullable = false)
     private LocalDateTime data;
+
+    @Getter @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private StatusAgenda statusAgenda;
 
-    @ManyToOne
+    @Getter @Setter
+    @Column(name = "observacao", columnDefinition = "TEXT")
+    private String observacao;
+
+    @Getter @Setter
+    @JoinColumn(name = "id_secretatia")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Secretaria secretaria;
-    @ManyToOne
+
+    @Getter @Setter
+    @JoinColumn(name = "id_paciente")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Paciente paciente;
-    @ManyToOne
+
+    @Getter @Setter
+    @JoinColumn(name = "id_agenda", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Agenda agenda;
 
 }
