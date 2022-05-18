@@ -4,6 +4,7 @@ import br.com.uniamerica.api.entity.Agenda;
 import br.com.uniamerica.api.entity.Paciente;
 import br.com.uniamerica.api.repository.AgendaRepository;
 import br.com.uniamerica.api.repository.PacienteRepository;
+import br.com.uniamerica.api.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,9 @@ public class PacienteController {
     @Autowired
     public PacienteRepository pacienteRepository;
 
+    @Autowired
+    public PacienteService pacienteService;
+
     /**
      *
      * @return
@@ -45,7 +49,11 @@ public class PacienteController {
      */
     @PostMapping
     public ResponseEntity<?> cadastrar(@RequestBody Paciente paciente){
-        pacienteRepository.save(paciente);
-        return new ResponseEntity<>("Registro Cadastrado", HttpStatus.OK);
+        try {
+            this.pacienteService.insert(paciente);
+            return ResponseEntity.ok().build();
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e);
+        }
     }
 }

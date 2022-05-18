@@ -39,7 +39,7 @@ public class Medico extends Pessoa {
     @JoinColumn(name = "id_especialidade")
     @ManyToOne(fetch = FetchType.LAZY)
     private Especialidade especialidade;
-
+    
     /**
      * @see Pessoa#Pessoa(Long, String)
      *

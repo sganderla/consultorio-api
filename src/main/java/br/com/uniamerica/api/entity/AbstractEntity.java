@@ -57,6 +57,7 @@ public abstract class AbstractEntity {
     @PreUpdate
     public void dataAtualizacao(){
         this.atualizado = LocalDateTime.now();
+        this.excluido = null;
     }
 
 }

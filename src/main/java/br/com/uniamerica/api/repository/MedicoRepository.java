@@ -2,10 +2,12 @@ package br.com.uniamerica.api.repository;
 
 import br.com.uniamerica.api.entity.Medico;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 /**
  * @author Eduardo Sganderla
@@ -17,9 +19,16 @@ import java.util.List;
 public interface MedicoRepository extends JpaRepository<Medico, Long> {
 
     /**
-     * @see Medico#Medico(Long, String, String)
+     *
+     * @param dataExcluido
+     * @param idMedico
      */
-    @Query("SELECT new Medico(medico.id, medico.nome, medico.crm) FROM Medico medico")
-    public List<Medico> listTable();
+    @Modifying
+    @Query("UPDATE Medico medico " +
+            "SET medico.excluido = :dataExcluido " +
+            "WHERE medico.id = :idMedico")
+    public void updateDataExcluido(
+            @Param("dataExcluido") LocalDateTime dataExcluido,
+            @Param("idMedico") Long idMedico);
 
 }

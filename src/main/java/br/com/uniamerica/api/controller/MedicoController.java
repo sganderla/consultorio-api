@@ -1,8 +1,6 @@
 package br.com.uniamerica.api.controller;
 
-import br.com.uniamerica.api.entity.Agenda;
 import br.com.uniamerica.api.entity.Medico;
-import br.com.uniamerica.api.repository.AgendaRepository;
 import br.com.uniamerica.api.repository.MedicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,7 +41,7 @@ public class MedicoController {
      */
     @GetMapping("listTable")
     public ResponseEntity<List<Medico>> listTable(){
-        return new ResponseEntity<>(medicoRepository.listTable(), HttpStatus.OK) ;
+        return new ResponseEntity<>(medicoRepository.findAll(), HttpStatus.OK) ;
     }
 
     /**

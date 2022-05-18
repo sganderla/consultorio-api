@@ -1,7 +1,8 @@
 package br.com.uniamerica.api.service;
 
+import br.com.uniamerica.api.entity.Convenio;
 import br.com.uniamerica.api.entity.Especialidade;
-import br.com.uniamerica.api.repository.EspecialidadeRepository;
+import br.com.uniamerica.api.repository.ConvenioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,18 +19,18 @@ import java.util.Optional;
  * @version 1.0.0
  */
 @Service
-public class EspecialidadeService {
+public class ConvenioService {
 
     @Autowired
-    private EspecialidadeRepository especialidadeRepository;
+    private ConvenioRepository convenioRepository;
 
     /**
      *
      * @param id
      * @return
      */
-    public Optional<Especialidade> findById(Long id){
-        return this.especialidadeRepository.findById(id);
+    public Optional<Convenio> findById(Long id){
+        return this.convenioRepository.findById(id);
     }
 
     /**
@@ -37,19 +38,19 @@ public class EspecialidadeService {
      * @param pageable
      * @return
      */
-    public Page<Especialidade> listAll(Pageable pageable){
-        return this.especialidadeRepository.findAll(pageable);
+    public Page<Convenio> listAll(Pageable pageable){
+        return this.convenioRepository.findAll(pageable);
     }
 
     /**
      *
      * @param id
-     * @param especialidade
+     * @param convenio
      */
     @Transactional
-    public void update(Long id, Especialidade especialidade){
-        if (id == especialidade.getId()) {
-            this.especialidadeRepository.save(especialidade);
+    public void update(Long id, Convenio convenio){
+        if (id == convenio.getId()) {
+            this.convenioRepository.save(convenio);
         }
         else {
             throw new RuntimeException();
@@ -58,24 +59,24 @@ public class EspecialidadeService {
 
     /**
      *
-     * @param especialidade
+     * @param convenio
      */
     @Transactional
-    public void insert(Especialidade especialidade){
-        this.especialidadeRepository.save(especialidade);
+    public void insert(Convenio convenio){
+        this.convenioRepository.save(convenio);
     }
 
     /**
      *
      * @param id
-     * @param especialidade
+     * @param convenio
      */
     @Transactional
-    public void updateStatus(Long id, Especialidade especialidade){
-        if (id == especialidade.getId()) {
-            this.especialidadeRepository.updateDataExcluido(
+    public void updateStatus(Long id, Convenio convenio){
+        if (id == convenio.getId()) {
+            this.convenioRepository.updateDataExcluido(
                     LocalDateTime.now(),
-                    especialidade.getId());
+                    convenio.getId());
         }
         else {
             throw new RuntimeException();
