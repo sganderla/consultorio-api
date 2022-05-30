@@ -1,7 +1,6 @@
 package br.com.uniamerica.api.service;
 
 import br.com.uniamerica.api.entity.Convenio;
-import br.com.uniamerica.api.entity.Especialidade;
 import br.com.uniamerica.api.repository.ConvenioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -29,8 +27,8 @@ public class ConvenioService {
      * @param id
      * @return
      */
-    public Optional<Convenio> findById(Long id){
-        return this.convenioRepository.findById(id);
+    public Convenio findById(Long id){
+        return this.convenioRepository.findById(id).orElse(new Convenio());
     }
 
     /**
@@ -40,21 +38,6 @@ public class ConvenioService {
      */
     public Page<Convenio> listAll(Pageable pageable){
         return this.convenioRepository.findAll(pageable);
-    }
-
-    /**
-     *
-     * @param id
-     * @param convenio
-     */
-    @Transactional
-    public void update(Long id, Convenio convenio){
-        if (id == convenio.getId()) {
-            this.convenioRepository.save(convenio);
-        }
-        else {
-            throw new RuntimeException();
-        }
     }
 
     /**
@@ -72,14 +55,27 @@ public class ConvenioService {
      * @param convenio
      */
     @Transactional
-    public void updateStatus(Long id, Convenio convenio){
+    public void update(Long id, Convenio convenio){
         if (id == convenio.getId()) {
-            this.convenioRepository.updateDataExcluido(
-                    LocalDateTime.now(),
-                    convenio.getId());
+            this.convenioRepository.save(convenio);
         }
         else {
-            throw new RuntimeException();
+            throw new RuntimeException("Error: Não foi possivel editar a Secretaria, valores inconsistentes.");
+        }
+    }
+
+    /**
+     *
+     * @param id
+     * @param convenio
+     */
+    @Transactional
+    public void desativar(Long id, Convenio convenio){
+        if (id == convenio.getId()) {
+            this.convenioRepository.desativar(convenio.getId());
+        }
+        else {
+            throw new RuntimeException("Error: Não foi possivel editar a Secretaria, valores inconsistentes.");
         }
     }
 }

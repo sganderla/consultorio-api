@@ -2,6 +2,8 @@ package br.com.uniamerica.api.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +16,9 @@ import javax.persistence.Table;
  * @version 1.0.0
  */
 @Entity
-@Table(name = "especialidades", schema = "public")
+@Audited
+@Table(name = "especialidades", schema = "consultorio")
+@AuditTable(value = "especialidades_audit", schema = "consultorio_audit")
 public class Especialidade extends AbstractEntity {
 
     @Getter @Setter

@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * @author Eduardo Sganderla
@@ -29,8 +29,8 @@ public class PacienteService {
      * @param id
      * @return
      */
-    public Optional<Paciente> findById(Long id){
-        return this.pacienteRepository.findById(id);
+    public Paciente findById(Long id) {
+        return this.pacienteRepository.findById(id).orElse(new Paciente());
     }
 
     /**
@@ -38,7 +38,7 @@ public class PacienteService {
      * @param pageable
      * @return
      */
-    public Page<Paciente> listAll(Pageable pageable){
+    public Page<Paciente> listAll(Pageable pageable) {
         return this.pacienteRepository.findAll(pageable);
     }
 
@@ -46,24 +46,9 @@ public class PacienteService {
      *
      * @param paciente
      */
-    public void insert(Paciente paciente){
+    public void insert(Paciente paciente) {
         this.validarFormulario(paciente);
         this.saveTransactional(paciente);
-    }
-
-    /**
-     *
-     * @param id
-     * @param paciente
-     */
-    public void update(Long id, Paciente paciente){
-        if (id == paciente.getId()) {
-            this.validarFormulario(paciente);
-            this.saveTransactional(paciente);
-        }
-        else {
-            throw new RuntimeException();
-        }
     }
 
     /**
@@ -71,7 +56,7 @@ public class PacienteService {
      * @param paciente
      */
     @Transactional
-    public void saveTransactional(Paciente paciente){
+    public void saveTransactional(Paciente paciente) {
         this.pacienteRepository.save(paciente);
     }
 
@@ -80,15 +65,28 @@ public class PacienteService {
      * @param id
      * @param paciente
      */
-    @Transactional
-    public void updateStatus(Long id, Paciente paciente){
+    public void update(Long id, Paciente paciente) {
         if (id == paciente.getId()) {
-            this.pacienteRepository.updateDataExcluido(
-                    LocalDateTime.now(),
-                    paciente.getId());
+            this.validarFormulario(paciente);
+            this.saveTransactional(paciente);
         }
         else {
-            throw new RuntimeException();
+            throw new RuntimeException("Error: Não foi possivel editar a Secretaria, valores inconsistentes.");
+        }
+    }
+
+    /**
+     *
+     * @param id
+     * @param paciente
+     */
+    @Transactional
+    public void desativar(Long id, Paciente paciente) {
+        if (id == paciente.getId()) {
+            this.pacienteRepository.desativar(paciente.getId());
+        }
+        else {
+            throw new RuntimeException("Error: Não foi possivel editar a Secretaria, valores inconsistentes.");
         }
     }
 
@@ -96,24 +94,24 @@ public class PacienteService {
      *
      * @param paciente
      */
-    public void validarFormulario(Paciente paciente){
+    public void validarFormulario(Paciente paciente) {
 
-        if( paciente.getTipoAtendimento().equals(TipoAtendimento.convenio) ){
-            if( paciente.getConvenio() == null || paciente.getConvenio().getId() == null ){
-                throw new RuntimeException(" Warning: Convênio não informado. ");
-            }
-            if( paciente.getNumeroCartaoConvenio() == null ){
-                throw new RuntimeException(" Warning: Cartão do convênio não informado. ");
-            }
-            if( paciente.getDataVencimento() == null ){
-                throw new RuntimeException(" Warning: Data de vencimento do cartão do convênio não informado. ");
-            }
-            if( paciente.getDataVencimento().compareTo(LocalDateTime.now()) <= 0 ){
-                throw new RuntimeException(" Warning: Data de vencimento do cartão do convênio está expirado. ");
-            }
+        if (paciente.getTipoAtendimento().equals(TipoAtendimento.convenio)) {
+
+            Assert.isTrue(paciente.getConvenio() == null || paciente.getConvenio().getId() == null,
+                    "Error: Convênio não informado.");
+
+            Assert.notNull(paciente.getNumeroCartaoConvenio(),
+                    "Error: Cartão do convênio não informado.");
+
+            Assert.notNull(paciente.getDataVencimento(),
+                    "Error: Data de vencimento do cartão do convênio não informado.");
+
+            Assert.isTrue(paciente.getDataVencimento().isBefore(LocalDateTime.now()),
+                    " Error: Data de vencimento do cartão do convênio está expirado. ");
         }
 
-        if( paciente.getTipoAtendimento().equals(TipoAtendimento.particular) ){
+        if (paciente.getTipoAtendimento().equals(TipoAtendimento.particular)) {
             paciente.setConvenio(null);
             paciente.setNumeroCartaoConvenio(null);
             paciente.setDataVencimento(null);

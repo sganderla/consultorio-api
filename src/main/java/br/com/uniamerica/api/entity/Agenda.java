@@ -2,6 +2,8 @@ package br.com.uniamerica.api.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,7 +15,9 @@ import java.time.LocalDateTime;
  * @version 1.0.0
  */
 @Entity
-@Table(name = "agendas", schema = "public")
+@Audited
+@Table(name = "agendas", schema = "consultorio")
+@AuditTable(value = "agendas_audit", schema = "consultorio_audit")
 public class Agenda extends AbstractEntity {
 
     @Getter @Setter
@@ -37,6 +41,11 @@ public class Agenda extends AbstractEntity {
     @JoinColumn(name = "id_paciente", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Paciente paciente;
+
+    @Getter @Setter
+    @JoinColumn(name = "id_secretaria")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Secretaria secretaria;
 
     @Getter @Setter
     @JoinColumn(name = "id_medico", nullable = false)

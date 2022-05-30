@@ -1,6 +1,8 @@
 package br.com.uniamerica.api.entity;
 
 import lombok.*;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -13,8 +15,10 @@ import java.math.BigDecimal;
  * @version 1.0.0
  */
 @Entity
+@Audited
 @NoArgsConstructor
-@Table(name = "medicos", schema = "public")
+@Table(name = "medicos", schema = "consultorio")
+@AuditTable(value = "medicos_audit", schema = "consultorio_audit")
 public class Medico extends Pessoa {
 
     @Getter @Setter

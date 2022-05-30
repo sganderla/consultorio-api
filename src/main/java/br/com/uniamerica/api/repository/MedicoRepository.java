@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-
 /**
  * @author Eduardo Sganderla
  *
@@ -20,15 +18,10 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
 
     /**
      *
-     * @param dataExcluido
      * @param idMedico
      */
     @Modifying
-    @Query("UPDATE Medico medico " +
-            "SET medico.excluido = :dataExcluido " +
-            "WHERE medico.id = :idMedico")
-    public void updateDataExcluido(
-            @Param("dataExcluido") LocalDateTime dataExcluido,
-            @Param("idMedico") Long idMedico);
+    @Query("UPDATE Medico medico SET medico.ativo = true WHERE medico.id = :idMedico")
+    public void desativar(@Param("idMedico") Long idMedico);
 
 }

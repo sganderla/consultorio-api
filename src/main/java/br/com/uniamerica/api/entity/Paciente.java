@@ -3,6 +3,8 @@ package br.com.uniamerica.api.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,7 +17,9 @@ import java.time.LocalDateTime;
  * @version 1.0.0
  */
 @Entity
-@Table(name = "pacientes", schema = "public")
+@Audited
+@Table(name = "pacientes", schema = "consultorio")
+@AuditTable(value = "pacientes_audit", schema = "consultorio_audit")
 public class Paciente extends Pessoa implements Serializable {
 
     @Getter @Setter

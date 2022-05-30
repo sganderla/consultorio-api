@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-
 /**
  * @author Eduardo Sganderla
  *
@@ -20,15 +18,10 @@ public interface SecretariaRepository extends JpaRepository<Secretaria, Long> {
 
     /**
      *
-     * @param dataExcluido
      * @param idSecretaria
      */
     @Modifying
-    @Query("UPDATE Secretaria secretaria " +
-            "SET secretaria.excluido = :dataExcluido " +
-            "WHERE secretaria.id = :idSecretaria")
-    public void updateDataExcluido(
-            @Param("dataExcluido") LocalDateTime dataExcluido,
-            @Param("idSecretaria") Long idSecretaria);
+    @Query("UPDATE Secretaria secretaria SET secretaria.ativo = true WHERE secretaria.id = :idSecretaria")
+    public void desativar(@Param("idSecretaria") Long idSecretaria);
 
 }

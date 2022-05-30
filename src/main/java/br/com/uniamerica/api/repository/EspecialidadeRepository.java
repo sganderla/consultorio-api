@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-
 /**
  * @author Eduardo Sganderla
  *
@@ -20,15 +18,11 @@ public interface EspecialidadeRepository extends JpaRepository<Especialidade, Lo
 
     /**
      *
-     * @param dataExcluido
      * @param idEspecialidade
      */
     @Modifying
-    @Query("UPDATE Especialidade especialidade " +
-            "SET especialidade.excluido = :dataExcluido " +
-            "WHERE especialidade.id = :idEspecialidade")
-    public void updateDataExcluido(
-            @Param("dataExcluido") LocalDateTime dataExcluido,
-            @Param("idEspecialidade") Long idEspecialidade);
+    @Query("UPDATE Especialidade especialidade SET especialidade.ativo = true " +
+            "WHERE especialidade.id = :idEspecialidade ")
+    public void desativar(@Param("idEspecialidade") Long idEspecialidade);
 
 }

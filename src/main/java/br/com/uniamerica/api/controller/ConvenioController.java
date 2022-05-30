@@ -1,17 +1,13 @@
 package br.com.uniamerica.api.controller;
 
 import br.com.uniamerica.api.entity.Convenio;
-import br.com.uniamerica.api.repository.ConvenioRepository;
+import br.com.uniamerica.api.service.ConvenioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Eduardo Sganderla
@@ -24,15 +20,30 @@ import java.util.List;
 public class ConvenioController {
 
     @Autowired
-    public ConvenioRepository convenioRepository;
+    private ConvenioService convenioService;
 
     /**
      *
+     * @param idConvenio
+     * @return
+     */
+    @GetMapping("/{idConvenio}")
+    public ResponseEntity<Convenio> findById(
+            @PathVariable("idConvenio") Long idConvenio
+    ){
+        return ResponseEntity.ok().body(this.convenioService.findById(idConvenio));
+    }
+
+    /**
+     *
+     * @param pageable
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<Convenio>> listAllConvenios(){
-        return new ResponseEntity<>(convenioRepository.findAll(), HttpStatus.OK) ;
+    public ResponseEntity<Page<Convenio>> listByAllPage(
+            Pageable pageable
+    ){
+        return ResponseEntity.ok().body(this.convenioService.listAll(pageable));
     }
 
     /**
@@ -41,9 +52,52 @@ public class ConvenioController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<?> cadastrar(@RequestBody Convenio convenio){
-        convenioRepository.save(convenio);
-        return new ResponseEntity<>("Registro Cadastrado", HttpStatus.OK);
+    public ResponseEntity<?> insert(
+            @RequestBody Convenio convenio
+    ){
+        try {
+            this.convenioService.insert(convenio);
+            return ResponseEntity.ok().body("Convênio Cadastrada com Sucesso.");
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
+    /**
+     *
+     * @param idConvenio
+     * @param convenio
+     * @return
+     */
+    @PutMapping("/{idConvenio}")
+    public ResponseEntity<?> update(
+            @PathVariable Long idConvenio,
+            @RequestBody Convenio convenio
+    ){
+        try {
+            this.convenioService.update(idConvenio, convenio);
+            return ResponseEntity.ok().body("Convênio Atualizada com Sucesso.");
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     *
+     * @param idConvenio
+     * @param convenio
+     * @return
+     */
+    @PutMapping("/desativar/{idConvenio}")
+    public ResponseEntity<?> desativar(
+            @PathVariable Long idConvenio,
+            @RequestBody Convenio convenio
+    ){
+        try {
+            this.convenioService.desativar(idConvenio, convenio);
+            return ResponseEntity.ok().body("Convênio Desativada com Sucesso.");
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

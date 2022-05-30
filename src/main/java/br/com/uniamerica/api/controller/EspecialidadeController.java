@@ -1,17 +1,13 @@
 package br.com.uniamerica.api.controller;
 
 import br.com.uniamerica.api.entity.Especialidade;
-import br.com.uniamerica.api.repository.EspecialidadeRepository;
 import br.com.uniamerica.api.service.EspecialidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.PrivateKey;
 
 /**
  * @author Eduardo Sganderla
@@ -26,16 +22,23 @@ public class EspecialidadeController {
     @Autowired
     private EspecialidadeService especialidadeService;
 
-    @Autowired
-    private EspecialidadeRepository especialidadeRepository;
-
+    /**
+     *
+     * @param idEspecialidade
+     * @return
+     */
     @GetMapping("/{idEspecialidade}")
     public ResponseEntity<Especialidade> findById(
             @PathVariable("idEspecialidade") Long idEspecialidade
     ){
-        return ResponseEntity.ok().body(this.especialidadeService.findById(idEspecialidade).get());
+        return ResponseEntity.ok().body(this.especialidadeService.findById(idEspecialidade));
     }
 
+    /**
+     *
+     * @param pageable
+     * @return
+     */
     @GetMapping
     public ResponseEntity<Page<Especialidade>> listByAllPage(
             Pageable pageable
@@ -43,6 +46,11 @@ public class EspecialidadeController {
         return ResponseEntity.ok().body(this.especialidadeService.listAll(pageable));
     }
 
+    /**
+     *
+     * @param especialidade
+     * @return
+     */
     @PostMapping
     public ResponseEntity<?> insert(
             @RequestBody Especialidade especialidade
@@ -55,10 +63,16 @@ public class EspecialidadeController {
         }
     }
 
+    /**
+     *
+     * @param idEspecialidade
+     * @param especialidade
+     * @return
+     */
     @PutMapping("/{idEspecialidade}")
     public ResponseEntity<?> update(
-            @RequestBody Especialidade especialidade,
-            @PathVariable Long idEspecialidade
+            @PathVariable Long idEspecialidade,
+            @RequestBody Especialidade especialidade
     ){
         try {
             this.especialidadeService.update(idEspecialidade, especialidade);
@@ -68,13 +82,19 @@ public class EspecialidadeController {
         }
     }
 
-    @PutMapping("/status/{idEspecialidade}")
-    public ResponseEntity<?> updateStatus(
-            @RequestBody Especialidade especialidade,
-            @PathVariable Long idEspecialidade
+    /**
+     *
+     * @param idEspecialidade
+     * @param especialidade
+     * @return
+     */
+    @PutMapping("/desativar/{idEspecialidade}")
+    public ResponseEntity<?> desativar(
+            @PathVariable Long idEspecialidade,
+            @RequestBody Especialidade especialidade
     ){
         try {
-            this.especialidadeService.updateStatus(idEspecialidade, especialidade);
+            this.especialidadeService.desativar(idEspecialidade, especialidade);
             return ResponseEntity.ok().body("Especialidade Desativada com Sucesso.");
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

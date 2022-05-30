@@ -2,6 +2,8 @@ package br.com.uniamerica.api.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,7 +15,9 @@ import java.time.LocalDateTime;
  * @version 1.0.0
  */
 @Entity
-@Table(name = "historicos", schema = "public")
+@Audited
+@Table(name = "historicos", schema = "consultorio")
+@AuditTable(value = "historicos_audit", schema = "consultorio_audit")
 public class Historico extends AbstractEntity {
 
     @Getter @Setter

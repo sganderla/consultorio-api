@@ -8,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * @author Eduardo Sganderla
@@ -28,8 +26,8 @@ public class SecretariaService {
      * @param id
      * @return
      */
-    public Optional<Secretaria> findById(Long id){
-        return this.secretariaRepository.findById(id);
+    public Secretaria findById(Long id){
+        return this.secretariaRepository.findById(id).orElse(new Secretaria());
     }
 
     /**
@@ -39,21 +37,6 @@ public class SecretariaService {
      */
     public Page<Secretaria> listAll(Pageable pageable){
         return this.secretariaRepository.findAll(pageable);
-    }
-
-    /**
-     *
-     * @param id
-     * @param secretaria
-     */
-    @Transactional
-    public void update(Long id, Secretaria secretaria){
-        if (id == secretaria.getId()) {
-            this.secretariaRepository.save(secretaria);
-        }
-        else {
-            throw new RuntimeException();
-        }
     }
 
     /**
@@ -71,14 +54,27 @@ public class SecretariaService {
      * @param secretaria
      */
     @Transactional
-    public void updateStatus(Long id, Secretaria secretaria){
+    public void update(Long id, Secretaria secretaria){
         if (id == secretaria.getId()) {
-            this.secretariaRepository.updateDataExcluido(
-                    LocalDateTime.now(),
-                    secretaria.getId());
+            this.secretariaRepository.save(secretaria);
         }
         else {
-            throw new RuntimeException();
+            throw new RuntimeException("Error: Não foi possivel editar a Secretaria, valores inconsistentes.");
+        }
+    }
+
+    /**
+     *
+     * @param id
+     * @param secretaria
+     */
+    @Transactional
+    public void desativar(Long id, Secretaria secretaria){
+        if (id == secretaria.getId()) {
+            this.secretariaRepository.desativar(secretaria.getId());
+        }
+        else {
+            throw new RuntimeException("Error: Não foi possivel editar a Secretaria, valores inconsistentes.");
         }
     }
 }

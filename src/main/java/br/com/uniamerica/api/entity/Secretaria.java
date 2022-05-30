@@ -2,6 +2,8 @@ package br.com.uniamerica.api.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +19,9 @@ import java.time.LocalDateTime;
  * @version 1.0.0
  */
 @Entity
-@Table(name = "secretarias", schema = "public")
+@Audited
+@Table(name = "secretarias", schema = "consultorio")
+@AuditTable(value = "secretarias_audit", schema = "consultorio_audit")
 public class Secretaria extends Pessoa {
 
     @Getter @Setter
