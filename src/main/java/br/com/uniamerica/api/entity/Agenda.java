@@ -1,5 +1,6 @@
 package br.com.uniamerica.api.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.AuditTable;

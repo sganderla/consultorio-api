@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,11 +23,6 @@ import java.math.BigDecimal;
 @AuditTable(value = "convenios_audit", schema = "consultorio_audit")
 public class Convenio extends AbstractEntity {
 
-    @Max(value = 10, message = "Tamanho máximo estrapolado.")
-    @Min(value = 3, message = "Tamanho Minimo não respeitado.")
-    @NotNull(message = "Valor não informado")
-    @NotEmpty(message = "Valor não informado")
-    @
     @Getter @Setter
     @Column(name = "nome", nullable = false, unique = true, length = 50)
     private String nome;

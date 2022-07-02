@@ -1,4 +1,4 @@
-package br.com.uniamerica.api.entity.enum;
+package br.com.uniamerica.api.entity;
 
 /**
  * @author Eduardo Sganderla

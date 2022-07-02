@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @version 1.0.0
  */
 @Controller
+@CrossOrigin(maxAge = 3600)
 @RequestMapping("/api/especialidades")
 public class EspecialidadeController {
 
@@ -59,7 +60,7 @@ public class EspecialidadeController {
             this.especialidadeService.insert(especialidade);
             return ResponseEntity.ok().body("Especialidade Cadastrada com Sucesso.");
         }catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Não foi possivel realizar o cadastro!");
         }
     }
 
@@ -78,7 +79,7 @@ public class EspecialidadeController {
             this.especialidadeService.update(idEspecialidade, especialidade);
             return ResponseEntity.ok().body("Especialidade Atualizada com Sucesso.");
         }catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Não foi possivel realizar a atualização!");
         }
     }
 
@@ -97,7 +98,7 @@ public class EspecialidadeController {
             this.especialidadeService.desativar(idEspecialidade, especialidade);
             return ResponseEntity.ok().body("Especialidade Desativada com Sucesso.");
         }catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Não foi possivel desativar a Especialidade");
         }
     }
 }

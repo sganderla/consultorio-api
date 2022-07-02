@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -58,6 +57,4 @@ public interface AgendaRepository extends JpaRepository<Agenda, Long> {
             @Param("dataAte") LocalDateTime localDateTimeAte,
             @Param("medico") Medico medico,
             @Param("paciente") Paciente paciente);
-
-
 }
